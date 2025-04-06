@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phân tích Link Shopee</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        textarea, input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Phân tích Link Shopee</h2>
+    <textarea id="inputUrl" rows="4" placeholder="Dán link Shopee mã hóa vào đây"></textarea>
+    <button onclick="parseShopeeLink()">Phân tích</button>
+    <table id="resultTable" style="display: none;">
+        <tr><th>Thông tin</th><th>Giá trị</th></tr>
+        <tr><td>Product Name</td><td id="productName"></td></tr>
+        <tr><td>Shop ID</td><td id="shopId"></td></tr>
+        <tr><td>Product ID</td><td id="productId"></td></tr>
+        <tr><td>Link SP</td><td id="linkSP"></td></tr>
+    </table>
+
+    <script>
+        function parseShopeeLink() {
+            const inputUrl = document.getElementById("inputUrl").value.trim();
+            if (!inputUrl) {
+                alert("Vui lòng nhập link Shopee!");
+                return;
+            }
+
+            // Giải mã URL
+            const decodedUrl = decodeURIComponent(inputUrl);
+            const parts = decodedUrl.split("-i.");
+            if (parts.length < 2) {
+                alert("Link không hợp lệ!");
+                return;
+            }
+
+            // Trích xuất Product Name
+            let productName = parts[0].substring(parts[0].lastIndexOf("/") + 1).replace(/-/g, " ");
+            document.getElementById("productName").innerText = productName;
+
+            // Trích xuất Shop ID và Product ID
+            const ids = parts[1].split(".");
+            const shopId = ids[0];
+            const productId = ids[1];
+            document.getElementById("shopId").innerText = shopId;
+            document.getElementById("productId").innerText = productId;
+
+            // Tạo Link SP
+            const linkSP = `https://shopee.vn/product/${shopId}/${productId}`;
+            document.getElementById("linkSP").innerText = linkSP;
+
+            // Hiển thị bảng kết quả
+            document.getElementById("resultTable").style.display = "table";
+        }
+    </script>
+</body>
+</html>
